@@ -1,14 +1,29 @@
 //apontamento do model que criamos para as Tarefas
 const tarefas = require('../models/tarefas');
+const secret = process.env.SECRET;
+const jwt = require('jsonwebtoken');
 
 const getAll = (req, res) => {
-  console.log(req.url);
-  tarefas.find(function(err, tarefas){
-    if(err) { 
-      res.status(500).send({ message: err.message })
+  const authHeader = req.get('authorization');
+
+  if (!authHeader) {
+    return res.status(401).send('Você precisa preencher o header Authorization!');
+  }
+
+  const token = authHeader.split(' ')[1];
+
+  jwt.verify(token, secret, function(error) {
+    if (error) {
+      return res.status(403).send('Esse token não é válido!');
     }
-    res.status(200).send(tarefas);
-  })
+
+    tarefas.find(function(err, tarefas){
+      if(err) {
+        res.status(500).send({ message: err.message })
+      }
+      res.status(200).send(tarefas);
+    })
+  });
 };
 
 const getById = (req, res) => {
@@ -16,7 +31,7 @@ const getById = (req, res) => {
   //Find sempre retorna uma lista
   //FindOne retorna um unico documento
   tarefas.find({ id }, function(err, tarefas){
-    if(err) { 
+    if(err) {
       res.status(500).send({ message: err.message })
     }
 
@@ -26,16 +41,16 @@ const getById = (req, res) => {
 
 const postTarefa = (req, res) => {
   console.log(req.body)
-  
+
   let tarefa = new tarefas(req.body)
 
   tarefa.save(function(err){
-    if(err) { 
+    if(err) {
       res.status(500).send({ message: err.message })
     }
     res.status(201).send(tarefa.toJSON())
   })
-  
+
 };
 
 const deleteTarefa = (req, res) => {
@@ -46,21 +61,21 @@ const deleteTarefa = (req, res) => {
   tarefas.find({ id }, function(err, tarefa){
     if(tarefa.length > 0){
       tarefas.deleteMany({ id }, function(err){
-        if(err) { 
-          res.status(500).send({ 
-            message: err.message, 
-            status: "FAIL" 
+        if(err) {
+          res.status(500).send({
+            message: err.message,
+            status: "FAIL"
            })
         }
-        res.status(200).send({ 
-          message: 'Tarefa removida com sucesso', 
-          status: "SUCCESS" 
+        res.status(200).send({
+          message: 'Tarefa removida com sucesso',
+          status: "SUCCESS"
         })
       })
     }else{
-      res.status(200).send({ 
-        message: 'Não há tafera para ser removida', 
-        status: "EMPTY" 
+      res.status(200).send({
+        message: 'Não há tafera para ser removida',
+        status: "EMPTY"
       })
     }
   })
@@ -89,7 +104,7 @@ const putTarefa = (req, res) => {
       // set são os valores que serão atualizados
       //UpdateMany atualiza vários registros de uma unica vez
       //UpdateOne atualiza um único registro por vez
-      
+
       tarefas.updateMany({ id }, { $set : req.body }, function (err) {
         if (err) {
           res.status(500).send({ message: err.message })
