@@ -1,11 +1,12 @@
+require("dotenv-safe").config(); // Estando aqui, não precisa chamar em outro arquivo. Pois este é o arquivo raiz.
+
 const express = require("express")
 const bodyParser = require("body-parser")
 const mongoose = require("mongoose")
-
 const app = express()
 
 //String de conexão
-mongoose.connect("mongodb://localhost:27017/reprograma", { 
+mongoose.connect(process.env.MONGODB_URL, { 
   useNewUrlParser: true, 
   useUnifiedTopology: true 
 });
@@ -25,8 +26,8 @@ const tarefas = require("./routes/tarefasRoute")
 const colaboradoras = require("./routes/colaboradorasRoute")
 
 //configurar body parser
-app.use(bodyParser.json());
-// app.use(express.json()); - Podemos usar a propria função de parser de json do express, sem a necessidade de instalar o body parser 
+//app.use(bodyParser.json());
+app.use(express.json());  //Podemos usar a propria função de parser de json do express, sem a necessidade de instalar o body parser 
 
 app.use(function (req, res, next) {
   res.header("Access-Control-Allow-Origin", "*")
@@ -39,6 +40,6 @@ app.use(function (req, res, next) {
 
 app.use("/", index)
 app.use("/tarefas", tarefas)
-app.use("/colaboradoras", require("./routes/colaboradorasRoute"))
+app.use("/colaboradoras", colaboradoras)
 
 module.exports = app
