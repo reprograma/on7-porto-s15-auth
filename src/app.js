@@ -41,6 +41,6 @@ app.use(function (req, res, next) {
 
 app.use("/", index)
 app.use("/tarefas", tarefas)
-app.use("/colaboradoras", require("./routes/colaboradorasRoute"))
+app.use("/colaboradoras", colaboradoras)
 
 module.exports = app

@@ -49,7 +49,7 @@
 `$ npm install bcrypt`
 
 2. Fazer require do bcrypt no `colaboradorasController.js`
-`$ const bcrypt = require('bcryptjs');`
+`$ const bcrypt = require('bcrypt');`
 
 3. Gerar hash com senha recebida no body da request
 `$ bcrypt.hashSync(request.body.senha, 10);`
@@ -65,7 +65,7 @@
 `$ Colaboradoras.findOne({ email: req.body.email }, function(error, colaboradora) {...}`
 
 3. Comparar senha de colaboradora encontra com a senha recebida via request, e mostrar um erro 401 caso seja diferente
-`$ bcrypt.compareSync(request.body.senha, treinadorEncontrado.senha);`
+`$ bcrypt.compareSync(request.body.senha, colaboradoraEncontrada.senha);`
 
 4. Fazer require do plugin JWT
 `$ const jwt = require('jsonwebtoken');`
