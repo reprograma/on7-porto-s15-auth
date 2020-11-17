@@ -1,122 +1,171 @@
-//apontamento do model que criamos para as Tarefas
-const tarefas = require('../models/tarefas');
+const tarefas = require("../models/tarefas");
 const SECRET = process.env.SECRET;
 const jwt = require("jsonwebtoken");
 
-
 const getAll = (req, res) => {
-  const authHeader = req.get('authorization');
-   if(!authHeader) {
-     return res.status(401).send('Cadê o negócio?')
-   }
-   const token = authHeader.split(' ')[1];
+  const authHeader = req.get("authorization");
+  if (!authHeader) {
+    return res.status(401).send("Cadê o negócio?");
+  }
+  const token = authHeader.split(" ")[1];
 
-   jwt.verify(token, SECRET, function(erro) {
-     if (erro) {
-       return res.status(403).send('Nope');
-     }
-   })
-  
-  tarefas.find(function(err, tarefas){
-    if(err) { 
-      res.status(500).send({ message: err.message })
+  jwt.verify(token, SECRET, function (erro) {
+    if (erro) {
+      return res.status(403).send("Nope");
+    }
+  });
+
+  tarefas.find(function (err, tarefas) {
+    if (err) {
+      res.status(500).send({ message: err.message });
     }
     res.status(200).send(tarefas);
-  })
+  });
 };
-
 
 const getById = (req, res) => {
   const id = req.params.id;
-  //Find sempre retorna uma lista
-  //FindOne retorna um unico documento
-  tarefas.find({ id }, function(err, tarefas){
-    if(err) { 
-      res.status(500).send({ message: err.message })
+
+  const authHeader = req.get("authorization");
+  if (!authHeader) {
+    return res.status(401).send("Cadê o negócio?");
+  }
+  const token = authHeader.split(" ")[1];
+
+  jwt.verify(token, SECRET, function (erro) {
+    if (erro) {
+      return res.status(403).send("Nope");
+    }
+  });
+
+  tarefas.find({ id }, function (err, tarefas) {
+    if (err) {
+      res.status(500).send({ message: err.message });
     }
 
     res.status(200).send(tarefas);
-  })
+  });
 };
 
 const postTarefa = (req, res) => {
-  console.log(req.body)
-  
-  let tarefa = new tarefas(req.body)
+  let tarefa = new tarefas(req.body);
 
-  tarefa.save(function(err){
-    if(err) { 
-      res.status(500).send({ message: err.message })
+  const authHeader = req.get("authorization");
+  if (!authHeader) {
+    return res.status(401).send("Quer fazer alguma coisa?");
+  }
+  const token = authHeader.split(" ")[1];
+
+  jwt.verify(token, SECRET, function (erro) {
+    if (erro) {
+      return res.status(403).send("Não deu!");
     }
-    res.status(201).send(tarefa.toJSON())
-  })
-  
+  });
+
+  tarefa.save(function (err) {
+    if (err) {
+      res.status(500).send({ message: err.message });
+    }
+    res.status(201).send(tarefa);
+  });
 };
 
 const deleteTarefa = (req, res) => {
   const id = req.params.id;
 
-  //deleteMany remove mais de um registro
-  //deleteOne remove apenas um registro
-  tarefas.find({ id }, function(err, tarefa){
-    if(tarefa.length > 0){
-      tarefas.deleteMany({ id }, function(err){
-        if(err) { 
-          res.status(500).send({ 
-            message: err.message, 
-            status: "FAIL" 
-           })
-        }
-        res.status(200).send({ 
-          message: 'Tarefa removida com sucesso', 
-          status: "SUCCESS" 
-        })
-      })
-    }else{
-      res.status(200).send({ 
-        message: 'Não há tafera para ser removida', 
-        status: "EMPTY" 
-      })
+  const authHeader = req.get("authorization");
+  if (!authHeader) {
+    return res.status(401).send("Quer fazer alguma coisa?");
+  }
+  const token = authHeader.split(" ")[1];
+
+  jwt.verify(token, SECRET, function (erro) {
+    if (erro) {
+      return res.status(403).send("Não deu!");
     }
-  })
+  });
+
+  tarefas.find({ id }, function (err, tarefa) {
+    if (tarefa > 0) { // retirei o .length
+      tarefas.deleteMany({ id }, function (err) {
+        if (err) {
+          res.status(500).send({
+            message: err.message,
+            status: "FAIL",
+          });
+        }
+        res.status(200).send({
+          message: "Tarefa removida com sucesso",
+          status: "SUCCESS",
+        });
+      });
+    } else {
+      res.status(200).send({
+        message: "Não há tafera para ser removida",
+        status: "EMPTY",
+      });
+    }
+  });
 };
 
 const deleteTarefaConcluida = (req, res) => {
-  //Deleta quando concluido = true
+  const authHeader = req.get("authorization");
+  if (!authHeader) {
+    return res.status(401).send("Quer fazer alguma coisa?");
+  }
+  const token = authHeader.split(" ")[1];
+
+  jwt.verify(token, SECRET, function (erro) {
+    if (erro) {
+      return res.status(403).send("Não deu!");
+    }
+  });
+
   try {
     tarefas.deleteMany({ concluido: true }, function (err) {
-        if (!err) {
-            res.status(200).send({ message: 'Tarefas concluidas removidas com sucesso', status: "SUCCESS" })
-        }
-    })
+      if (!err) {
+        res.status(200).send({
+          message: "Tarefas concluidas removidas com sucesso",
+          status: "SUCCESS",
+        });
+      }
+    });
   } catch (err) {
-    console.log(err)
-    return res.status(424).send({ message: err.message })
+    console.log(err);
+    return res.status(424).send({ message: err.message });
   }
-}
+};
 
 const putTarefa = (req, res) => {
   const id = req.params.id;
 
-  tarefas.find({ id }, function(err, tarefa){
-    if(tarefa.length> 0){
-      //faz o update apenas para quem respeitar o id passado no parametro
-      // set são os valores que serão atualizados
-      //UpdateMany atualiza vários registros de uma unica vez
-      //UpdateOne atualiza um único registro por vez
-      
-      tarefas.updateMany({ id }, { $set : req.body }, function (err) {
-        if (err) {
-          res.status(500).send({ message: err.message })
-        }
-        res.status(200).send({ message: "Registro alterado com sucesso"})
-      })
-    }else {
-      res.status(200).send({ message: "Não há registros para serem atualizados com esse id"})
-    }
-  })
+  const authHeader = req.get("authorization");
+  if (!authHeader) {
+    return res.status(401).send("Quer fazer alguma coisa?");
+  }
+  const token = authHeader.split(" ")[1];
 
-}
+  jwt.verify(token, SECRET, function (erro) {
+    if (erro) {
+      return res.status(403).send("Não deu!");
+    }
+  });
+
+  tarefas.find({ id }, function (err, tarefa) {
+    if (tarefa.length > 0) {
+      tarefas.updateMany({ id }, { $set: req.body }, function (err) {
+        if (err) {
+          res.status(500).send({ message: err.message });
+        }
+        res.status(200).send({ message: "Registro alterado com sucesso" });
+      });
+    } else {
+      res.status(200).send({
+        message: "Não há registros para serem atualizados com esse id",
+      });
+    }
+  });
+};
 
 module.exports = {
   getAll,
@@ -124,5 +173,5 @@ module.exports = {
   postTarefa,
   deleteTarefa,
   deleteTarefaConcluida,
-  putTarefa
+  putTarefa,
 };

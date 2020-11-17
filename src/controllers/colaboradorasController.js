@@ -4,6 +4,17 @@ const SECRET = process.env.SECRET;
 const bcrypt = require("bcrypt");
 
 const getAllColabs = (req, res) => {
+  const authHeader = req.get('authorization');
+   if(!authHeader) {
+     return res.status(401).send('Cadê o negócio?')
+   }
+   const token = authHeader.split(' ')[1];
+
+   jwt.verify(token, SECRET, function(erro) {
+     if (erro) {
+       return res.status(403).send('Nope');
+     }
+   })
   colaboradoras.find((err, colaboradoras) => {
     if (err) {
       return res.status(500).send({ message: err.message });
@@ -11,6 +22,7 @@ const getAllColabs = (req, res) => {
     return res.status(200).send(colaboradoras);
   });
 };
+
 
 const create = (req, res) => {
   const senhaComHash = bcrypt.hashSync(req.body.senha, 10);
@@ -46,9 +58,6 @@ const login = (req, res) => {
     });
   };
   
-
-
-
 module.exports = {
   getAllColabs,
   create,
