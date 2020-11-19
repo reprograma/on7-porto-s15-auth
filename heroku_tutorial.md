@@ -89,10 +89,12 @@ heroku config:set SECRET=SUA_CHAVE_RSA_PRIVADA_SEM_ASPAS
 heroku config:set MONGODB_URL=SUA_STRING_DE_CONEXÃO_DO_MONGO_ATLAS
 ```
 
-14. Por fim, tudo o que precisamos agora é subir os arquivos do nosso projeto para o Heroku:
+14. Por fim, tudo o que precisamos agora é adicionar e subir os arquivos do nosso projeto para o Heroku:
 
 ```
-git push heroku master
+$ git add .
+$ git commit -m sua_mensagem
+$ git push heroku master
 ```
 
 15. Você irá encontrar seu site em: https://NOME-DA-SUA-APP.herokuapp.com
