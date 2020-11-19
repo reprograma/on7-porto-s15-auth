@@ -1,5 +1,5 @@
 //apontamento do model que criamos para as Tarefas
-const tarefas = require('../models/tarefas');
+const tarefas = require('../models/tasks');
 const SECRET = process.env.SECRET;
 const jwt = require('jsonwebtoken');
 
@@ -11,6 +11,7 @@ const getAll = (req, res) => {
   }
 
   const token = authHeader.split(' ')[1];
+  console.log(token)
 
   jwt.verify(token, SECRET, function(erro) {
     if (erro) {
