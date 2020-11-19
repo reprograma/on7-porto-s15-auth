@@ -86,23 +86,23 @@ const deleteTarefa = (req, res) => {
   });
 
   tarefas.find({ id }, function (err, tarefa) {
-    if (tarefa > 0) { // retirei o .length
+    if (tarefa.length > 0) { 
       tarefas.deleteMany({ id }, function (err) {
         if (err) {
           res.status(500).send({
             message: err.message,
-            status: "FAIL",
+            status: "Falhou",
           });
         }
         res.status(200).send({
           message: "Tarefa removida com sucesso",
-          status: "SUCCESS",
+          status: "Sucesso",
         });
       });
     } else {
       res.status(200).send({
         message: "Não há tafera para ser removida",
-        status: "EMPTY",
+        status: "Vazio",
       });
     }
   });
@@ -126,7 +126,7 @@ const deleteTarefaConcluida = (req, res) => {
       if (!err) {
         res.status(200).send({
           message: "Tarefas concluidas removidas com sucesso",
-          status: "SUCCESS",
+          status: "Sucesso",
         });
       }
     });
