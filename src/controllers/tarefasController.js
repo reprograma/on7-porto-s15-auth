@@ -81,17 +81,31 @@ const postTarefa = (req, res) => {
 const deleteTarefa = (req, res) => {
   const id = req.params.id;
 
-  Tarefas.find({ id }, (err, tarefa) => {
-    if (tarefa.length > 0) {
-      Tarefas.deleteMany({ id }, (err) => {
-        if (err) {
-          return res.status(424).send({ message: err.message });
-        };
-        return res.status(200).send('Tarefa removida com sucesso');
-      });
-    } else {
-      return res.status(404).send('Tarefa não encontrada');
+  const authHeader = req.get('authorization');
+
+  if (!authHeader) {
+    return res.status(401).send('Header não encontrado');
+  };
+
+  const token = authHeader.split(' ')[1];
+
+  jwt.verify(token, SECRET, err => {
+    if (err) {
+      return res.status(403).send('Token inválido');
     };
+
+    Tarefas.find({ id }, (err, tarefa) => {
+      if (!tarefa.length) {
+        return res.status(404).send('Tarefa não encontrada');
+      } else {
+        Tarefas.deleteOne({ id }, err => {
+          if (err) {
+            return res.status(424).send({ message: err.message });
+          };
+          return res.status(200).send('Tarefa excluída com sucesso');
+        });
+      };
+    });
   });
 };
 
