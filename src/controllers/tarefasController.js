@@ -17,7 +17,7 @@ const getAll = (req, res) => {
     };
 
     Tarefas.find((err, tarefas) => {
-      if(err) {
+      if (err) {
         return res.status(424).send({ message: err.message });
       };
       return res.status(200).send(tarefas);
@@ -27,21 +27,38 @@ const getAll = (req, res) => {
 
 const getById = (req, res) => {
   const id = req.params.id;
-  
-  Tarefas.find({ id }, (err, tarefa) => {
-    if(err) {
-      return res.status(424).send({ message: err.message });
+  const authHeader = req.get('authorization');
+
+  if (!authHeader) {
+    return res.status(401).send('Header não encontrado');
+  };
+
+  const token = authHeader.split(' ')[1];
+
+  jwt.verify(token, SECRET, err => {
+    if (err) {
+      return res.status(403).send('Token inválido');
     };
-    return res.status(200).send(tarefa);
+
+    Tarefas.find({ id }, (err, tarefa) => {
+      if (!tarefa.length) {
+        return res.status(404).send('Tarefa não encontrada');
+      };
+
+      if (err) {
+        return res.status(424).send({ message: err.message });
+      };
+      return res.status(200).send(tarefa);
+    });
   });
 };
 
 const postTarefa = (req, res) => {
-  
+
   let tarefa = new Tarefas(req.body);
 
   tarefa.save(err => {
-    if(err) {
+    if (err) {
       return res.status(424).send({ message: err.message });
     };
     return res.status(201).send(tarefa);
@@ -50,11 +67,11 @@ const postTarefa = (req, res) => {
 
 const deleteTarefa = (req, res) => {
   const id = req.params.id;
-  
+
   Tarefas.find({ id }, (err, tarefa) => {
-    if(tarefa.length > 0){
+    if (tarefa.length > 0) {
       Tarefas.deleteMany({ id }, (err) => {
-        if(err) {
+        if (err) {
           return res.status(424).send({ message: err.message });
         };
         return res.status(200).send('Tarefa removida com sucesso');
@@ -84,8 +101,8 @@ const putTarefa = (req, res) => {
   const id = req.params.id;
 
   Tarefas.find({ id }, (err, tarefa) => {
-    if(tarefa.length> 0){
-      Tarefas.updateOne({ id }, { $set : req.body },  err => {
+    if (tarefa.length > 0) {
+      Tarefas.updateOne({ id }, { $set: req.body }, err => {
         if (err) {
           return res.status(424).send({ message: err.message })
         };
