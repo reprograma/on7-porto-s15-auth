@@ -2,14 +2,17 @@ const Tarefas = require('../models/tarefas');
 const SECRET = process.env.SECRET;
 const jwt = require('jsonwebtoken');
 
-const getAll = (req, res) => {
+const autenticar = (req, res) => {
   const authHeader = req.get('authorization');
-
   if (!authHeader) {
     return res.status(401).send('Header não encontrado');
-  }
-
+  };
   const token = authHeader.split(' ')[1];
+  return token;
+};
+
+const getAll = (req, res) => {
+  const token = autenticar(req, res);
 
   jwt.verify(token, SECRET, err => {
     if (err) {
@@ -27,13 +30,7 @@ const getAll = (req, res) => {
 
 const getById = (req, res) => {
   const id = req.params.id;
-  const authHeader = req.get('authorization');
-
-  if (!authHeader) {
-    return res.status(401).send('Header não encontrado');
-  };
-
-  const token = authHeader.split(' ')[1];
+  const token = autenticar(req, res);
 
   jwt.verify(token, SECRET, err => {
     if (err) {
@@ -54,13 +51,7 @@ const getById = (req, res) => {
 };
 
 const postTarefa = (req, res) => {
-  const authHeader = req.get('authorization');
-
-  if (!authHeader) {
-    return res.status(401).send('Header não encontrado');
-  };
-
-  const token = authHeader.split(' ')[1];
+  const token = autenticar(req, res);
 
   jwt.verify(token, SECRET, err => {
     if (err) {
@@ -80,14 +71,7 @@ const postTarefa = (req, res) => {
 
 const deleteTarefa = (req, res) => {
   const id = req.params.id;
-
-  const authHeader = req.get('authorization');
-
-  if (!authHeader) {
-    return res.status(401).send('Header não encontrado');
-  };
-
-  const token = authHeader.split(' ')[1];
+  const token = autenticar(req, res);
 
   jwt.verify(token, SECRET, err => {
     if (err) {
@@ -110,18 +94,26 @@ const deleteTarefa = (req, res) => {
 };
 
 const deleteTarefaConcluida = (req, res) => {
-  Tarefas.find({ concluido: true }, (err, tarefas) => {
-    if (tarefas.length > 0) {
-      Tarefas.deleteMany({ concluido: true }, err => {
-        if (err) {
-          return res.status(424).send({ message: err.message });
-        };
-        return res.status(200).send('Tarefa removida com sucesso');
-      });
-    } else {
-      return res.status(404).send('Não há tarefas concluídas');
+  const token = autenticar(req, res);
+  
+  jwt.verify(token, SECRET, err => {
+    if (err) {
+      return res.status(403).send('Token inválido');
     };
-  });
+
+    Tarefas.find({ concluido: true }, (err, tarefas) => {
+      if (!tarefas.length) {
+        return res.status(404).send('Tarefa não encontrada');
+      } else {
+        Tarefas.deleteMany({ concluido: true }, err => {
+          if (err) {
+            return res.status(424).send({ message: err.message });
+          };
+          return res.status(200).send('Tarefa(s) excluída(s) com sucesso');
+        });
+      };
+    });
+  }); 
 };
 
 const putTarefa = (req, res) => {
