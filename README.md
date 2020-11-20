@@ -6,18 +6,18 @@ O objetivo do exercício da semana é uma API de tarefas a se fazer. *Só usuár
 
 ### Este é o passo-a-passo resumido da atividade do sábado
 
-1. Criar, do jeito que sempre fazemos, pelo menos uma tarefa para testar no final de tudo: [FEITO]
+1. Criar, do jeito que sempre fazemos, pelo menos uma tarefa para testar no final de tudo;
 
-2. Criar colaboradoras; [FEITO]
+2. Criar colaboradoras; 
 
-3. Proteger a senha da colaboradora BCRYPT! [FEITO]
+3. Proteger a senha da colaboradora BCRYPT!;
 
-4. Visualizar todas as colaboradoras cadastradas (para facilitar seu trabalho no passo 5); [FEITO]
+4. Visualizar todas as colaboradoras cadastradas (para facilitar seu trabalho no passo 5);
 
 5. Criar um token para cada colaboradora - login;
-   	- Preparando o ambiente e pacotes - json web token, chave secret , dotenv-safe
-   	- Finalmente manipulando as colaboradoras
-6. Criar um método - baseado no token criado no passo 5 - para visualizar a tarefa. É a rota autenticada.
+   	- Preparando o ambiente e pacotes - json web token, chave secret , dotenv-safe;
+   	- Finalmente manipulando as colaboradoras;
+6. Criar um método - baseado no token criado no passo 5 - para visualizar a tarefa. É a rota autenticada;
 
 7. Testar no Postman se o token deu certo e a tarefa aparece.
 
