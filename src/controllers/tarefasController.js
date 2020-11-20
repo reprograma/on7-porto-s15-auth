@@ -54,14 +54,27 @@ const getById = (req, res) => {
 };
 
 const postTarefa = (req, res) => {
+  const authHeader = req.get('authorization');
 
-  let tarefa = new Tarefas(req.body);
+  if (!authHeader) {
+    return res.status(401).send('Header não encontrado');
+  };
 
-  tarefa.save(err => {
+  const token = authHeader.split(' ')[1];
+
+  jwt.verify(token, SECRET, err => {
     if (err) {
-      return res.status(424).send({ message: err.message });
+      return res.status(403).send('Token inválido');
     };
-    return res.status(201).send(tarefa);
+
+    let tarefa = new Tarefas(req.body);
+
+    tarefa.save(err => {
+      if (err) {
+        return res.status(424).send({ message: err.message });
+      };
+      return res.status(201).send(tarefa);
+    });
   });
 };
 
