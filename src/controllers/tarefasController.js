@@ -95,7 +95,7 @@ const deleteTarefa = (req, res) => {
 
 const deleteTarefaConcluida = (req, res) => {
   const token = autenticar(req, res);
-  
+
   jwt.verify(token, SECRET, err => {
     if (err) {
       return res.status(403).send('Token inválido');
@@ -113,23 +113,31 @@ const deleteTarefaConcluida = (req, res) => {
         });
       };
     });
-  }); 
+  });
 };
 
 const putTarefa = (req, res) => {
   const id = req.params.id;
 
-  Tarefas.find({ id }, (err, tarefa) => {
-    if (tarefa.length > 0) {
-      Tarefas.updateOne({ id }, { $set: req.body }, err => {
-        if (err) {
-          return res.status(424).send({ message: err.message })
-        };
-        return res.status(200).send('Registro alterado com sucesso');
-      });
-    } else {
-      return res.status(200).send('Tarefa não encontrada');
+  const token = autenticar(req, res);
+
+  jwt.verify(token, SECRET, err => {
+    if (err) {
+      return res.status(403).send('Token inválido');
     };
+
+    Tarefas.find({ id }, (err, tarefa) => {
+      if (!tarefa.length) {
+        return res.status(404).send('Tarefa não encontrada');
+      } else {
+        Tarefas.updateOne({ id }, { $set: req.body }, err => {
+          if (err) {
+            return res.status(424).send({ message: err.message })
+          };
+          return res.status(200).send('Tarefa atualizada com sucesso');
+        });
+      };
+    });
   });
 };
 
