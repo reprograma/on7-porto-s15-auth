@@ -28,6 +28,7 @@ const getAll = (req, res) => {
   });
 };
 
+
 const getById = (req, res) => {
   const id = req.params.id;
   const token = autenticar(req, res);

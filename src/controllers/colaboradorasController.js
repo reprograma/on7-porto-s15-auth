@@ -18,12 +18,24 @@ const create = (req, res) => {
 };
 
 const getAll = (req, res) => {
-  Colaboradoras.find((err, colaboradoras) => {
-    if(err) {
-      return res.status(424).send({ message: err.message });
+  const authHeader = req.get('authorization');
+  if (!authHeader) {
+    return res.status(401).send('Header não encontrado');
+  };
+  const token = authHeader.split(' ')[1];
+
+  jwt.verify(token, SECRET, err => {
+    if (err) {
+      return res.status(403).send('Token inválido');
     };
-    return res.status(200).send(colaboradoras);
-  });
+
+    Colaboradoras.find((err, colaboradoras) => {
+      if(err) {
+        return res.status(424).send({ message: err.message });
+      };
+      return res.status(200).send(colaboradoras);
+    });
+  });  
 };
 
 const login = (req, res) => {
