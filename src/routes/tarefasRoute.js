@@ -1,6 +1,7 @@
 const express = require("express");
 const router = express.Router();
 const controller = require("../controllers/tarefasController");
+process.env.PATH
 
 router.get("/", controller.getAll);
 router.get("/tarefas", controller.getAll);
@@ -10,4 +11,4 @@ router.delete("/:id", controller.deleteTarefa);
 router.delete("/", controller.deleteTarefaConcluida);
 router.put("/:id", controller.putTarefa);
 
-module.exports = router;
+module.exports = router; 

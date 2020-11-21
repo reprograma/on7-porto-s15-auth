@@ -11,14 +11,21 @@
     "type": "git",
     "url": "git+https://github.com/reprograma/on7-porto-s12-banco-de-dados.git"
   },
-  "author": "",
+  "author": "Monique Simões",
   "license": "ISC",
   "bugs": {
     "url": "https://github.com/reprograma/on7-porto-s12-banco-de-dados/issues"
   },
   "homepage": "https://github.com/reprograma/on7-porto-s12-banco-de-dados#readme",
   "dependencies": {
+    "bcrypt": "^5.0.0",
+    "body-parser": "^1.19.0",
+    "dotenv-safe": "^8.2.0",
     "express": "^4.17.1",
-    "mongoose": "^5.10.11"
+    "jsonwebtoken": "^8.5.1",
+    "mongoose": "^5.10.14"
+  },
+  "engines": {
+    "node": "v12.18.3"
   }
 }
