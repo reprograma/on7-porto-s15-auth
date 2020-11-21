@@ -2,9 +2,9 @@
 
 ## Exercício feito no repositório
 
-O objetivo do exercício da semana é uma API de tarefas a se fazer. *Só usuárias que possuem um token válido* podem visualizar as tarefas que foram criadas. Este passo-a-passo foi feito baseado no repositório de Anna (inserir o link da conta)
+O objetivo do exercício da semana é uma API de tarefas a se fazer. *Só usuárias que possuem um token válido* podem visualizar as tarefas que foram criadas. Este passo-a-passo foi feito baseado no [repositório Reprograma](#https://github.com/reprograma/on7-porto-s15-auth) da instrutora [Anna](#https://github.com/AnnaNee).
 
-### Este é o passo-a-passo resumido da atividade do sábado
+### Passo-a-passo resumido da atividade feita em aula (14/11/2020)
 
 1. Criar, do jeito que sempre fazemos, pelo menos uma tarefa para testar no final de tudo;
 
@@ -16,7 +16,7 @@ O objetivo do exercício da semana é uma API de tarefas a se fazer. *Só usuár
 
 5. Criar um token para cada colaboradora - login;
    	- Preparando o ambiente e pacotes - json web token, chave secret , dotenv-safe;
-   	- Finalmente manipulando as colaboradoras;
+      	- Finalmente manipulando as colaboradoras;
 6. Criar um método - baseado no token criado no passo 5 - para visualizar a tarefa. É a rota autenticada;
 
 7. Testar no Postman se o token deu certo e a tarefa aparece.
@@ -118,15 +118,9 @@ E aí, será que deu tudo certo?? Vamos ver!
 
 __________________
 
+⚠️ [Repositório em construção]
 
-
-
-
-autenticacao: quem é vc
-
-autorizacao: o que vcpode fazer??
-
-## Por que se preocupar com autenticação
+## Por que se preocupar com autenticação e autorização
 
 Quando fazemos uma API Rest, adicionamos linhas de código - nos arquivos `controller` - para ver registros, adicionar, excluir, editar e tudo mais. São os métodos como GET, PUT e DELETE que exibem ou alteram qualquer coisa que está no banco de dados, certo?
 
@@ -143,58 +137,9 @@ Mas será que é prudente deixar todas essas funções expostas para qualquer pe
 | Excluir um colaborador que foi desligado.                    | DELETE | Gerente de RH.         | colaboradoresController               |
 | Visualizar a lista de salários de todos os colaboradores, incluindo a proprietária. | GET    | Proprietária da loja.  | colaboradoresController               |
 
-Em resumo, é isso o que será feito neste repositório: gerenciar permissões, seguindo estes passos:
 
-- 
-- 
-- 
-- 
-
-Mas, para fazer direito, vamos começar do começo...
 
 ## Criptografia, Hash e Tokens
-
-### Hash
-
-
-
-Hash: É o dígito verificador gerado por um algoritmo. Alguns algoritmos são: febraban, MD5, SHA1, SHA-256, SHA-512, bcrypt. Uma função hash é um algoritmo que mapeia dados de comprimento variável para dados de comprimento fixo. Os valores retornados por uma função hash são chamados valores hash, códigos hash, somas hash, checksums ou simplesmente hashes.
-
-Não dá pra converter o hash de volta, o que é diferente de criptografia...
-
-### Criptografia
-
-Aqui a gente nâo perde dados
-
-tipos de algoritmos de criptografia
-
-RSA (mais comum), AES, RC4, Blowfish, curvas elipticas, YAK
-
-#### Criptografia simétrica
-
-#### Criptografia assimétrica
-
-### Token
-
-É um padrão RFC (RFC-7519) que define como transmitir e armazenar objetos JSON de forma segura. Json Web Token.
-
-É formado por 
-
-Header (como o token foi criado  { "alg": "HS256", "typ": "JWT"}, 
-
-Payload (onde passamos qualquer informaçao) {"name": "mariana", "email": "mariana@gmail.com", "senha": "mariana1234"} e 
-
-Signature (qual agoritmo foi usado para gerar o token?), é o SECRET que montou o token!
-
-Aqui geraremos apenas um token.
-
-
-
-### Exercício
-
-Converta seu nome 
-
-
 
 
 
