@@ -1,0 +1,6 @@
+passo a passo
+
+1. POST Colaboradoras: pra adicionar as pessoas autorizadas;
+2. GET Colaboradoras: pra ver se deu certo o que adicionei
+3. POST Login: para criar os tokens
+4. GET Tarefas: para visualizar as tarefas já tendo o token

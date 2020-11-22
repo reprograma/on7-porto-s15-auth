@@ -18,7 +18,10 @@
   },
   "homepage": "https://github.com/reprograma/on7-porto-s12-banco-de-dados#readme",
   "dependencies": {
+    "bcrypt": "^5.0.0",
+    "dotenv-safe": "^8.2.0",
     "express": "^4.17.1",
-    "mongoose": "^5.10.11"
+    "jsonwebtoken": "^8.5.1",
+    "mongoose": "^5.10.14"
   }
 }

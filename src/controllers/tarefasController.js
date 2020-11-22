@@ -1,31 +1,50 @@
-//apontamento do model que criamos para as Tarefas
 const tarefas = require('../models/tarefas');
+const SECRET = process.env.SECRET
+const jwt = require('jsonwebtoken')
 
 const getAll = (req, res) => {
-  console.log(req.url);
-  tarefas.find(function(err, tarefas){
-    if(err) { 
-      res.status(500).send({ message: err.message })
+  const authHeader = req.get ('authorization');
+  if (!authHeader) {
+    return res.status(401).send('oxe, cadê os negoço do header?')
+  }
+    const token = authHeader.split('') [1];  
+  jwt.verify(token, SECRET, function(erro) {
+    if (erro) {
+      return res.status(403).send('Nãm')
     }
-    res.status(200).send(tarefas);
-  })
+    tarefas.find(function(err, tarefas){
+      if(err) { 
+        res.status(500).send({ message: err.message })
+      }
+      res.status(200).send(tarefas);
+    })
+  });
 };
+  
+  
 
 const getById = (req, res) => {
   const id = req.params.id;
-  //Find sempre retorna uma lista
-  //FindOne retorna um unico documento
+  const authHeader = req.get ('authorization');
+  if (!authHeader) {
+    return res.status(401).send('oxe, cadê os negoço do header?')
+  }
+    const token = authHeader.split('') [1];  
+  jwt.verify(token, SECRET, function(erro) {
+    if (erro) {
+      return res.status(403).send('Nãm')
+    }
   tarefas.find({ id }, function(err, tarefas){
     if(err) { 
       res.status(500).send({ message: err.message })
     }
-
     res.status(200).send(tarefas);
+    })
   })
 };
 
 const postTarefa = (req, res) => {
-  console.log(req.body)
+  
   
   let tarefa = new tarefas(req.body)
 
@@ -50,7 +69,7 @@ const deleteTarefa = (req, res) => {
           res.status(500).send({ 
             message: err.message, 
             status: "FAIL" 
-           })
+          })
         }
         res.status(200).send({ 
           message: 'Tarefa removida com sucesso', 
@@ -84,12 +103,7 @@ const putTarefa = (req, res) => {
   const id = req.params.id;
 
   tarefas.find({ id }, function(err, tarefa){
-    if(tarefa.length> 0){
-      //faz o update apenas para quem respeitar o id passado no parametro
-      // set são os valores que serão atualizados
-      //UpdateMany atualiza vários registros de uma unica vez
-      //UpdateOne atualiza um único registro por vez
-      
+    if(tarefa.length> 0){     
       tarefas.updateMany({ id }, { $set : req.body }, function (err) {
         if (err) {
           res.status(500).send({ message: err.message })
