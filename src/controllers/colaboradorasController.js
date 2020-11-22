@@ -1,9 +1,10 @@
 //apontamento do model que criamos para as Tarefas
-const tarefas = require('../models/tarefas');
+const colaboradoras = require('../models/colaboradoras');
 const SECRET = process.env.SECRET;
 const jwt = require('jsonwebtoken');
 
-const getAll = (req, res) => {
+
+const getAllColaboradora = (req, res) => {
  const authHeader = req.get('authorization');
 
  if (!authHeader) {
@@ -17,11 +18,11 @@ const getAll = (req, res) => {
      return res.status(403).send('Nope');
    }
 
-   tarefas.find(function(err, tarefas){
+   colaboradoras.find(function(err, colaboradoras){
      if(err) {
        res.status(500).send({ message: err.message })
      }
-     res.status(200).send(tarefas);
+     res.status(200).send(colaboradoras);
    })
  });
 };
@@ -30,37 +31,37 @@ const getById = (req, res) => {
  const id = req.params.id;
  //Find sempre retorna uma lista
  //FindOne retorna um unico documento
- tarefas.find({ id }, function(err, tarefas){
+ tarefas.find({ id }, function(err, colaboradoras){
    if(err) {
      res.status(500).send({ message: err.message })
    }
 
-   res.status(200).send(tarefas);
+   res.status(200).send(colaboradoras);
  })
 };
 
-const postTarefa = (req, res) => {
+const postColaboradora = (req, res) => {
  console.log(req.body)
 
- let tarefa = new tarefas(req.body)
+ let colaboradora = new colaboradoras(req.body)
 
  tarefa.save(function(err){
    if(err) {
      res.status(500).send({ message: err.message })
    }
-   res.status(201).send(tarefa.toJSON())
+   res.status(201).send(colaboradora.toJSON())
  })
 
 };
 
-const deleteTarefa = (req, res) => {
+const deleteColaboradora = (req, res) => {
  const id = req.params.id;
 
  //deleteMany remove mais de um registro
  //deleteOne remove apenas um registro
- tarefas.find({ id }, function(err, tarefa){
-   if(tarefa.length > 0){
-     tarefas.deleteMany({ id }, function(err){
+ colaboradoras.find({ id }, function(err, colaboradora){
+   if(colaboradoras.length > 0){
+    colaboradoras.deleteMany({ id }, function(err){
        if(err) {
          res.status(500).send({
            message: err.message,
@@ -68,25 +69,25 @@ const deleteTarefa = (req, res) => {
           })
        }
        res.status(200).send({
-         message: 'Tarefa removida com sucesso',
+         message: 'Colaboradora removida com sucesso',
          status: "SUCCESS"
        })
      })
    }else{
      res.status(200).send({
-       message: 'Não há tafera para ser removida',
+       message: 'Não há colaboradora para ser removida',
        status: "EMPTY"
      })
    }
  })
 };
 
-const deleteTarefaConcluida = (req, res) => {
+const deleteColaboradoraConcluida = (req, res) => {
  //Deleta quando concluido = true
  try {
    tarefas.deleteMany({ concluido: true }, function (err) {
        if (!err) {
-           res.status(200).send({ message: 'Tarefas concluidas removidas com sucesso', status: "SUCCESS" })
+           res.status(200).send({ message: 'Colaboradoras removidas com sucesso', status: "SUCCESS" })
        }
    })
  } catch (err) {
@@ -95,17 +96,17 @@ const deleteTarefaConcluida = (req, res) => {
  }
 }
 
-const putTarefa = (req, res) => {
+const putColaboradora = (req, res) => {
  const id = req.params.id;
 
- tarefas.find({ id }, function(err, tarefa){
-   if(tarefa.length> 0){
+ colaboradoras.find({ id }, function(err, colaboradora){
+   if(colaboradora.length> 0){
      //faz o update apenas para quem respeitar o id passado no parametro
      // set são os valores que serão atualizados
      //UpdateMany atualiza vários registros de uma unica vez
      //UpdateOne atualiza um único registro por vez
 
-     tarefas.updateMany({ id }, { $set : req.body }, function (err) {
+     colaboradoras.updateMany({ id }, { $set : req.body }, function (err) {
        if (err) {
          res.status(500).send({ message: err.message })
        }
@@ -119,10 +120,10 @@ const putTarefa = (req, res) => {
 }
 
 module.exports = {
- getAll,
+ getAllColaboradora,
  getById,
- postTarefa,
- deleteTarefa,
- deleteTarefaConcluida,
- putTarefa
+ postColaboradora,
+ deleteColaboradora,
+ deleteColaboradoraConcluida,
+ putColaboradora
 };
