@@ -7,7 +7,7 @@ const SECRET = process.env.SECRET;
 const getAll = (req, res) => {
     const authHeader = req.get('authorization');
         if (!authHeader) {
-            return res.status(401).send('Kd os Header menino?!')
+            return res.status(401).send('cadê os Header menino?!')
         }
         const token = authHeader.split(' ')[1];
 
