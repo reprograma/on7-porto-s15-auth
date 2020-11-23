@@ -1,68 +1,61 @@
 const tasks = require('../models/tasks')
 const jwt = require('jsonwebtoken')
-
 const SECRET = process.env.SECRET
 
-
-const postTask = (req, res) => {
-
-  const authHeader = req.get('authorization')
-
-  if (!authHeader) {
+const tokenVerification = (header, method) => {   
+  if (!header) {
     return res.status(401).send(`Por favor, insira seu token.`)
   }
-
-  const token = authHeader.split(' ')[1]
-  
+  const token = header.split(' ')[1]
   jwt.verify(token, SECRET, function(erro) {
     if (erro) {
       return res.status(403).send(`Acesso negado.`)
     }
-  
-  let task = new tasks(req.body)
-
-  task.save(function(err){
-    if (err) {
-      res.status(500).send({ message: err.message })
-    }
-    res.status(201).send(task.toJSON())
-    })
+  method()
   })
+}
+
+const postTask = (req, res) => {
+  const authHeader = req.get('authorization')
+  
+  const post = () => {
+    let task = new tasks(req.body)
+    task.save(function(err){
+      if (err) {res.status(500).send({ message: err.message })}
+      res.status(201).send(task.toJSON())
+    })
+  }
+
+  tokenVerification(authHeader, post)
 }
 
 const getAllTasks = (req, res) => {
-
   const authHeader = req.get('authorization')
 
-  if (!authHeader) {
-    return res.status(401).send(`Por favor, insira seu token.`)
+  const getAll = () => {
+    tasks.find(function(err, tasks){
+      if (err) {res.status(500).send({ message: err.message })}
+      res.status(200).send(tasks)
+    }) 
   }
 
-  const token = authHeader.split(' ')[1]
-  
-  jwt.verify(token, SECRET, function(erro) {
-    if (erro) {
-      return res.status(403).send(`Acesso negado.`)
-    }
-
-    tasks.find(function(err, tasks){
-      if (err) {
-        res.status(500).send({ message: err.message })
-      }
-      res.status(200).send(tasks)
-    })
-  })
+  tokenVerification(authHeader, getAll)
 }
 
 const getByConclusion = (req, res) => {
-  const completed = req.query.completed
-    tasks.find({ completed }, function(err, tasks){
-    if (err) {
-      res.status(500).send({ message: err.message })
-    }
+  const authHeader = req.get('authorization')
 
-    res.status(200).send(tasks)
-  })
+  const getConcluded = () => {
+    const completed = req.query.completed
+    tasks.find({ completed }, function(err, task){
+      if (err) {
+        res.status(500).send({ message: err.message })
+      }
+      res.status(201).send(task)
+    })
+  }
+
+  tokenVerification(authHeader, getConcluded)
 }
 
 const deleteTaskByID = (req, res) => {
@@ -83,26 +76,17 @@ const deleteTaskByID = (req, res) => {
 }
 
 const deleteTaskConcluida = (req, res) => {
-  
   const authHeader = req.get('authorization')
-  if (!authHeader) {
-    return res.status(401).send(`Por favor, insira seu token.`)
-  }
 
-  const token = authHeader.split(' ')[1] 
-
-  jwt.verify(token, SECRET, function(erro) {
-    if (erro) {
-      return res.status(403).send(`Acesso negado`)
+  const deleteConcluded = () => {
+  tasks.deleteMany({ 'completed' : true }, function(err){
+    if (err) {
+      res.status(500).send({ message: err.message })
     }
-
-      tasks.deleteMany({ 'completed' : true }, function(err){
-        if (err) {
-          res.status(500).send({ message: err.message })
-        }
-        res.status(200).send({ message: `A tarefa foi excluída com sucesso` })
-      })
-  })
+    res.status(200).send({ message: `A tarefa foi excluída com sucesso` })
+    })
+  }
+  tokenVerification(authHeader, deleteConcluded)
 }
 
 // const putTask = (req, res) => {
