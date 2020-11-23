@@ -8,7 +8,7 @@ router.get('/', controller.getAllTasks);
 router.get('/filtrodeconclusao', controller.getByConclusion);
 router.post('/', controller.postTask);
 router.delete('/excluirporid/:id', controller.deleteTaskByID);
-router.delete('/excluirconcluidas', controller.deleteTaskConcluida);
+router.delete('/excluirconcluidas', controller.deleteTaskConcluded);
 // router.put('/:id', controller.putTarefa);
 
 module.exports = router;

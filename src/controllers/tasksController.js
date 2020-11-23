@@ -75,7 +75,7 @@ const deleteTaskByID = (req, res) => {
   })
 }
 
-const deleteTaskConcluida = (req, res) => {
+const deleteTaskConcluded = (req, res) => {
   const authHeader = req.get('authorization')
 
   const deleteConcluded = () => {
@@ -111,6 +111,6 @@ module.exports = {
   getByConclusion,
   postTask,
   deleteTaskByID,
-  deleteTaskConcluida,
+  deleteTaskConcluded,
   // putTask
 }
