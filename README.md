@@ -1,4 +1,4 @@
-# on6-xp-s15-jwt
+# on6-MINAS-s15-jwt
 
 ## Autenticação
 
