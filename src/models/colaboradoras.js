@@ -2,9 +2,10 @@ const mongoose = require('mongoose');
 
 //estrutura do seu model (atributos da sua entidade)
 const colaboradorasSchema = new mongoose.Schema({
+    id : { type : Number},
     nome: { type: String },
     email: { type: String },
-    senha: { type: String }
+    senha: { type: String },
 },{
     //gera por padrão uma versão para cada atualização do documento
     versionKey: false

@@ -1,15 +1,27 @@
+<<<<<<< HEAD
 require('dotenv-safe').config();
+=======
+require('dotenv-safe').config()
+>>>>>>> e79354e... criptografia, hash e token
 
 const express = require("express")
 const bodyParser = require("body-parser")
 const mongoose = require("mongoose")
 
+
+
 const app = express()
 
 //String de conexão
+<<<<<<< HEAD
 mongoose.connect(process.env.MONGODB_URL, {
   useNewUrlParser: true,
   useUnifiedTopology: true
+=======
+mongoose.connect(process.env.MONGODB_URL, { 
+  useNewUrlParser: true, 
+  useUnifiedTopology: true 
+>>>>>>> e79354e... criptografia, hash e token
 });
 
 //Conexão com o mongo
